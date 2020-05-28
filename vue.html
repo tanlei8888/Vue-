@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <div id="vue1">
+        <h2 v-on:click='eventHandle("深圳")'>{{name}}好帅</h2>
+        <h2 @click='eventHandle("深圳")'>{{name}}好帅</h2>
+        <h2 @mouseover='() => {alert(100)}'>{{name}}好帅</h2>
+        <h2>年龄：{{gender}}</h2>
+        <h2>爱好：{{hobby}}</h2>
+    </div> -->
+    
+    <ul id="vue1">
+        <li v-for='(d,i) in arr'>
+            {{d}}
+            <button @click='eventHandle(i)'>插入新LI</button>
+        </li>
+    </ul>
+    <script src="https://cn.vuejs.org/js/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el:'#vue1',
+            data:{
+                // name:'王帅',
+                // gender:23,
+                // hobby:'唱歌',
+                arr:[11111,22222,33333,44444]
+            },
+            methods:{
+                eventHandle(i){
+                    // alert('你好'+a)
+                    this.arr.splice(i,1)
+                }
+            }
+
+        })
+    </script>
+</body>
+</html>

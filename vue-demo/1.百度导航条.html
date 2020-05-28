@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav id="nav" :style='nav'>
+        <div class="left" :style='left'>
+            <span>{{news}}</span>
+            <span>{{hao}}</span>
+            <span>{{map}}</span>
+            <span>{{vediu}}</span>
+            <span>{{tieba}}</span>
+            <span>{{sdutus}}</span>
+            <span>{{more}}</span>
+        </div>
+        <div class="right" :style='right'>
+            <span :style="red">{{kjfy}}</span>
+            <span>{{city}}</span>
+            <span :style='blue'>{{setting}}</span>
+        </div>
+    </nav>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el:'#nav',
+            data:{
+                news:'新闻',
+                hao:'hao123',
+                map:'地图',
+                vediu:'视频',
+                tieba:'贴吧',
+                sdutus:'学生',
+                more:'更多',
+                kjfy:'抗击肺炎',
+                city:'深圳',
+                setting:'设置',
+                nav:{
+                    height:'50px',
+                    lineHeight:'50px',
+                    display:'flex',
+                    justifyContent:'space-between',
+                    alignItems:'center',
+                    fontSize:'14px'
+                },
+                left:{
+                    width:'400px',
+                    display:'flex',
+                    justifyContent:'space-around'
+                },
+                right:{
+                    width:'200px',
+                    display:'flex',
+                    justifyContent:'space-around',
+                    alignItems:'center'
+                },
+                red:{
+                    color:'red',
+                    fontSize:'16px'
+                },
+                blue:{
+                    backgroundColor:'blue',
+                    width:'50px',
+                    textAlign:'center',
+                    height:'50px',
+                    lineHeight:'50px',
+                    borderRadius:'10px'
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .active{
+            color: yellow;
+            font-size: 50px;
+        }
+        .bind{
+            background-color: blue;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div id="app" v-bind:class='className'
+    v-bind:title = 'msg'
+    >
+        {{msg}}
+    </div> -->
+    <!-- 简写 -->
+    <div id="app" :class='[className,className2]'
+    :title = 'msg' :style='{width:"300px"}'>
+        {{msg}}
+    </div>
+    <script src="https://cn.vuejs.org/js/vue.js"></script>
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+                className:'active',
+                className2:'bind',
+                msg:'helli Vue!!'
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app" @click='handleClick'>
+        <input v-on:inputChange='input(e)'  type="text" v-model='msg'/>
+        <input  type="checkbox" v-model='flag'/>
+        <input  type="checkbox" v-model='arr' value="苹果"/>
+        <input  type="checkbox" v-model='arr' value="香蕉"/>
+        <input  type="checkbox" v-model='arr' value="山竹"/>
+    </div>
+    <script src="https://cn.vuejs.org/js/vue.js"></script>
+    <script>
+       let vm = new Vue({
+            el:'#app',
+            data:{
+                msg:'hello Vue!!',
+                flag:true,
+                arr:[]
+            },
+            methods:{
+                handleClick(e){
+                    console.log(vm.$slots)
+                }
+            }
+        })
+        console.log(vm.$slots)
+    </script>
+</body>
+</html>

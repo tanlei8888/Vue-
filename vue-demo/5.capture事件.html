@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <!-- capture属性 当有事件发生用以捕获事件 先自己先执行然后事件源本身再执行
+        层级高的capture优先执行 -->
+        <div @click.capture='captureClick1'>
+            Click1
+            <div @click.capture='captureClick2'>
+                Click2
+                <div @click='captureClick3'>
+                    Click3
+                        <div @click='captureClick4'>
+                        Click4
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 事件冒泡情况下添加self属性会跳过self属性事件执行 点击本身才触发回调 -->
+        <!-- <div @click='captureClick1'>
+            Click1
+            <div @click.self='captureClick2'>
+                Click2
+                <div @click='captureClick3'>
+                    Click3
+                    <div @click='captureClick4'>
+                        Click4
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+
+            },
+            methods:{
+                 captureClick1:function(){
+                     console.log('今天我真开心111');
+                 },
+                 captureClick2:function(){
+                     console.log('今天我真开心222');
+                 },
+                 captureClick3:function(){
+                     console.log('今天我真开心333');
+                 },
+                 captureClick4:function(){
+                     console.log('今天我真开心444');
+                 },
+            }
+        })
+    </script>
+</body>
+</html>

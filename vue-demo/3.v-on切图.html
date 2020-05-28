@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app" >
+        <div>
+            <button @click='toogleClick'>切换图片</button>
+        </div>
+        <!-- <img :src="imgSrc" alt=""> -->
+        <img :[srcname]="imgSrc" alt="">
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+                imgSrc:'../images/1.jpeg',
+                srcname:'src'
+            },
+            methods:{
+                toogleClick:function(){
+                    this.imgSrc =
+                    this.imgSrc === '../images/1.jpeg' ? '../images/2.jpeg' : '../images/1.jpeg'
+                }
+            }
+        })
+    </script>
+</body>
+</html>
