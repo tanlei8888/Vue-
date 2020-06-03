@@ -1,0 +1,81 @@
+#app {
+  width: 1000px;
+  margin: 50px auto;
+  border: 1px solid black;
+}
+#app .app-title {
+  width: 900px;
+  margin: auto;
+  height: 100px;
+  line-height: 100px;
+  font-size: 20px;
+  color: #8e301f;
+}
+#app .app-text {
+  width: 900px;
+  margin: auto;
+}
+#app .app-text textarea {
+  width: 900px;
+}
+#app .app-content {
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#app .app-content ul.left {
+  list-style: none;
+}
+#app .app-content ul.left li {
+  display: inline-block;
+  padding-right: 20px;
+}
+#app .app-content .right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#app .app-content .right .open {
+  position: relative;
+  padding: 20px;
+}
+#app .app-content .right .open::after {
+  position: absolute;
+  content: "";
+  right: 0;
+  top: 25px;
+  width: 10px;
+  height: 10px;
+  display: block;
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
+  transform: rotate(45deg);
+}
+#app .app-content .right .release {
+  margin: 20px;
+  width: 50px;
+  height: 30px;
+  padding: 20px;
+  background-color: #fcc0a1;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 10px;
+}
+#app .app-list {
+  width: 900px;
+  margin: auto;
+}
+#app .app-list div {
+  position: relative;
+  padding: 50px 0;
+}
+#app .app-list div span {
+  padding: 10px;
+  text-align: center;
+  color: white;
+  position: absolute;
+  right: 0;
+  background-color: #8e301f;
+  border-radius: 3px;
+}

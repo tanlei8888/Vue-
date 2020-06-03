@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #app table {
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <table>
+            <thead>
+                <th>编号</th>
+                <th>名称</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>总价</th>
+            </thead>
+            <tbody>
+                <tr v-for='item,index of products'>
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.price}}</td>
+                    <td>
+                        <button @click="add(index)">+</button> {{item.num}}
+                        <button @click='sub(index)'>-</button> </td>
+                    <td>{{item.num*item.price}}</td>
+                </tr>
+            </tbody>
+            <section>
+                总价：{{getProductsAllPrci}}
+            </section>
+            <section>
+                总价：{{gettotalprice()}}
+            </section>
+        </table>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                products: [{
+                    id: 1,
+                    name: 'apple',
+                    price: 3,
+                    num: 2,
+
+                }, {
+                    id: 1,
+                    name: 'pear',
+                    price: 4,
+                    num: 3
+
+                }, {
+                    id: 1,
+                    name: 'banana',
+                    price: 5,
+                    num: 4,
+
+                }]
+            },
+            computed: {
+                getProductsAllPrci() {
+                    let products = this.products;
+                    let totalPrice = 0
+                    products.map(e => {
+                        totalPrice += e.price * e.num
+                    });
+                    return totalPrice
+                }
+            },
+            methods: {
+                add: function(index) {
+                    this.products[index].num++
+                },
+                sub: function(index) {
+                    if (this.products[index].num - 1 === 0) {
+                        return
+                    }
+                    this.products[index].num--
+                },
+                gettotalprice() {
+                    let products = this.products;
+                    let totalPrice = 0
+                    products.map(e => {
+                        totalPrice += e.price * e.num
+                    });
+                    return totalPrice
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #app div{
+            height: 100px;
+            /* background-color: skyblue; */
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div v-for="(item,index) in colorBox" :key='index' v-show='item.show'>
+            <p :style="item">{{index+1}}</p>
+        </div>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+       let vm =  new Vue({
+            el:'#app',
+            data:{
+                colorBox:[
+                    {backgroundColor:'red',show:true},
+                    {backgroundColor:'orange',show:true},
+                    {backgroundColor:'yellow',show:true},
+                    {backgroundColor:'Cyan',show:true},
+                    {backgroundColor:'blue',show:true},
+                    {backgroundColor:'purple',show:false}
+                    ]
+            }
+        })
+    </script>
+</body>
+</html>

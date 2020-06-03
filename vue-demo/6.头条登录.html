@@ -8,25 +8,56 @@
 </head>
 
 <body>
+    <!-- v-model 表单绑定控件 限制：input selector textarea components -->
     <div id="app">
         <section class="toutiao">
-            <section class="title"></section>
+            <section class="title">手机登录/注册</section>
             <section class="loginInput">
-                <section class="phone"></section>
-                <section class="code"></section>
+                <section class="phone">
+                    <section class="left">+86</section>
+                    <section class="right">
+                        <!-- 绑定v-model 实现data.phone跟着改变 -->
+                        <input type="text" placeholder="手机号" v-model='phone' jkldaskjn h>
+                    </section>
+                </section>
+                <section class="code">
+                    <section class="left">
+                        <!-- 绑定v-model 实现data.code跟着改变 -->
+                        <input type="text" placeholder="请输入4位验证码" v-model='code'>
+                    </section>
+                    <section class="right">
+                        发送验证码
+                    </section>
+                </section>
             </section>
-            <section class="login">确定</section>
+            <section class="login" @click='login'>确定</section>
+            手机号：{{phone}}
+            <br /> 验证码：{{code}}
         </section>
     </div>
     <script src="./node_modules/vue/dist/vue.js"></script>
     <script>
         let vm = new Vue({
-            el: '#app',
-            data: {
+                el: '#app',
+                data: {
+                    phone: "",
+                    code: ""
+                },
+                methods: {
+                    login: function() {
+                        let phone = this.phone;
+                        let code = this.code;
+                        let data = {
+                            phone,
+                            code
+                        }
+                        console.log(data)
+                    }
+                }
 
-            },
-
-        })
+            })
+            // console.log(vm.phone);
+            // console.log(vm.code);
     </script>
 </body>
 

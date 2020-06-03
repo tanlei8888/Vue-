@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <!-- <p v-pin="200" v-size="50" > 沉梦昂志，翻山而歌！</p> -->
+        <p v-color v-pin="200" v-size:[direction]="50"> 沉梦昂志，翻山而歌！</p>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        // 全局指令
+        Vue.directive("size", {
+            bind: function(el, binding, vnode) {
+                console.log(binding);
+                console.log(binding.arg);
+                el.style.color = 'pink'
+                el.style[binding.arg] = binding.value + "px"
+            }
+        });
+        // 接受此指令绑定的所有函数
+        let color = Vue.directive('color', {
+                bind: function(el, binding, vnode) {
+                    console.log(el, binding, vnode)
+                },
+                inserted: function(el, binding, vnode) {
+                    console.log(el, binding, vnode)
+                }
+            })
+            // 接受此指令绑定的所有函数
+        console.log(color)
+
+
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                direction: 'fontSize',
+                color: 'purple'
+            },
+            directives: { //局部指令
+                pin: {
+                    inserted: function(el, binding, vnode) {
+                        console.log(vnode);
+                        console.log(el);
+                        console.log(binding);
+                        el.style.position = "fixed"
+                            // el.style.left = binding.expression + "px"
+                        el.style.left = binding.value + "px"
+
+                        el.style.top = vnode.data.directives[0].value + "px"
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

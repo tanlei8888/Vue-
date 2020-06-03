@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        {{abc}}
+        <div>
+            <button @click='addCount'>增加</button>
+        </div>
+    </div>
+</body>
+
+
+<script src="https://cn.vuejs.org/js/vue.js"></script>
+<!-- 1. 引入 React Router 需要的依赖库 -->
+<script src="https://unpkg.com/vuex@3.4.0/dist/vuex.js"></script>
+<script>
+    let store = new Vuex.Store({
+        state: {
+            count: 1
+        },
+        mutations: {
+            // 注意点  在mutations中，变动必须是同步函数
+            //例如 setTimeout 网络请求ajax等等
+            //传入的函数名可以是动态属性 参数直接可以传入 数字 
+            // ['add']:function(state,step=2){
+            //     state.count += step
+            //     console.log(state);
+            // },
+            // 也可以传入对象
+            ['add']:function(state,playload){
+                state.count += playload.step
+                console.log(state);
+            }
+        }
+    })
+    let vm = new Vue({
+        el: '#app',
+        store,
+        computed: {
+            abc: function () {
+                return this.$store.state.count
+            }
+        },
+        methods: {
+            addCount: function () {
+                this.$store.commit({
+                    type:'add',
+                    step:10
+                })
+            }
+        }
+    })
+</script>
+
+</html>

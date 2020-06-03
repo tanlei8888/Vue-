@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-focus id="myText" value="文本域">
+        <input type="text" v-focus id="myText" value="文本域">
+        <input type="text" v-focus id="myText" value="文本域">
+        <input type="text" v-focus id="myText" value="文本域">
+        <input type="text" v-focus id="myText" value="文本域">
+        <input type="text" v-focus id="myText" value="文本域">
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        Vue.directive('focus',{
+            inserted:function(el,binding,vnode){
+                console.log(el);
+                console.log(binding);
+                console.log(vnode.data.attrs);
+                el.focus()
+            },
+            binding:function(el,binding,vnode){
+                el.focus()
+            },
+            update:function(el,binding,vnode){
+                el.focus()
+            },
+            componentUpdated:function(el,binding,vnode){
+                el.focus()
+            }
+        })
+        let vm = new Vue({
+            el:'#app',
+            data:{
+
+            }
+        })
+        
+    </script>
+</body>
+</html>

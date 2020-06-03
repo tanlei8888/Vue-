@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/14.微博留言板.css">
+</head>
+
+<body>
+    <div id="app">
+        <weibo-message></weibo-message>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        // 创建组件 component
+        Vue.component('weibo-message', {
+            data: function() {
+                return {
+                    textValue: "",
+                    values: []
+                }
+            },
+            methods: {
+                add: function() {
+                    if (!this.textValue.trim()) {
+                        alert('请不要输入空内容')
+                    } else {
+                        this.values.unshift(this.textValue);
+                        this.textValue = ""
+                    }
+                },
+                del: function(index) {
+                    this.values.splice(index, 1)
+                }
+            },
+            template: `
+            <div>
+                <div class="app-title">
+                有什么新鲜事想告诉大家？   
+                </div>
+                <div class="app-text">
+                    <textarea
+                    v-model='textValue'
+                    name="" id="" cols="30" rows="10">
+                    </textarea>
+                </div>
+                <div class="app-content">
+                    <ul class="left">
+                        <li>表情</li>
+                        <li>图片</li>
+                        <li>视频</li>
+                        <li>话题</li>
+                        <li>头条文章</li>
+                    </ul>
+                    <div class="right">
+                        <div class="open">公开</div>
+                        <div class="release" @click='add'>发布</div>
+                    </div>
+                </div>
+                <div class="app-list">
+                    <div v-for='item,index in values' :key='index'>
+                        {{item}}
+                        <span v-if='item' @click='del(index)'>删除</span>
+                    </div>
+                </div>
+            </div>
+            `
+        })
+        let vm = new Vue({
+            el: '#app',
+            data: {
+
+            },
+            components: {
+
+            }
+        })
+    </script>
+</body>
+
+</html>

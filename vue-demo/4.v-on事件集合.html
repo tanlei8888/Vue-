@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
+    <!-- 阻止事件默认行为 -->
     <div id="app" @click='parentClick'>
         <!-- <a href="http://www.baidu.com" @mouseover="over" @mouseout="out">跳转1</a>
         <a href="http://www.baidu.com" @mouseover="over" @mouseout="out">跳转2</a>
@@ -19,11 +22,11 @@
     <script src="./node_modules/vue/dist/vue.js"></script>
     <script>
         new Vue({
-            el:'#app',
-            data:{
+            el: '#app',
+            data: {
 
             },
-            methods:{
+            methods: {
                 //鼠标事件
                 // over:function(){
                 //     alert("鼠标进入")
@@ -32,14 +35,15 @@
                 //     alert("鼠标离开")
                 // }
                 //阻止冒泡 事件默认事件
-                parentClick:function(){
+                parentClick: function() {
                     console.log('我是父元素事件')
                 },
-                children(){
+                children() {
                     console.log('我是子元素事件');
                 }
             }
         })
     </script>
 </body>
+
 </html>

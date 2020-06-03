@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .tab {
+        display: flex;
+    }
+
+    .tab-item {
+        width: 200px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        border: 1px solid #ddd;
+        color: black;
+    }
+
+    .active {
+        background-color: #ddd;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <!-- 
+            导航的 最外层
+            item.path === currentTab 表示该项被选中
+         -->
+        <div class="tab">
+            <div :class="['tab-item',{active:item.path==currentTab}]" @click.prevent.stop="switchTab(index)"
+                v-for="item,index in navs">{{item.title}}</div>
+        </div>
+        <router-link to='/home/123'>切菜</router-link>
+        <div class="content">
+            <!-- 视图的出口 配置 -->
+            <router-view></router-view>
+        </div>
+    </div>
+</body>
+
+<!-- <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
+<script src="./node_modules/vue/dist/vue.js"></script>
+
+<script> -->
+<script src="https://cn.vuejs.org/js/vue.js"></script>
+<!-- 1. 引入 React Router 需要的依赖库 -->
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script>
+    //  主页组件
+    let appHome = {
+            props: ['id'],
+            template: `
+                <div >{{id}}{{$route.params}}主页
+                <router-view></router-view>
+                </div>
+            `
+        };
+        let appIntroduce = {
+            props: ['id'],
+            template: '<div >{{id}}{{$route.params}}公司介绍<router-view></router-view></div>'
+        };
+        let appProduct = {
+            props: ['id'],
+            template: '<div >{{id}}{{$route.params}}产品详情</div>'
+        };
+        let PageNotFind = {
+            template: '<div>404未找到页面</div>'
+        };
+        let HomeDetail = {
+            template: `
+                <div>
+                    <img src='http://pic.netbian.com/uploads/allimg/200528/120844-1590638924b04f.jpg' />
+                </div>
+            `
+        }
+
+    //2. 初始化 VueRouter的实例
+    const router = new VueRouter({
+        routes:[{
+            path: "/home/:id",
+            component: appHome,
+            props:{id:'a'}
+        }, {
+            path: "/introduce/:id",
+            component: appIntroduce,
+            props:{id:'b'},
+            // 重定向别名
+            //重新跳转
+            redirect:{
+                name:'product'
+            }
+        }, {
+            path: "/product/:id",
+            name:'product',
+            component: appProduct,
+            props:{id:'c'}
+        }]
+    })
+    //3. 将router 作为属性传入到app中
+    let app = new Vue({
+        router,
+        el: "#app",
+        data: {
+            currentTab: "/home", //当前渲染的组件
+            navs: [{
+                path: "/home/123",
+                title: "主页"
+            }, {
+                path: "/introduce/456",
+                title: "公司介绍"
+            }, {
+                path: "/product/789",
+                title: "产品详情"
+            }]
+        },
+        methods: {
+            // 4. 切换 菜单栏事件
+            switchTab: function (index) {
+                // 使用push 切换 路由
+                this.$router.push(this.navs[index].path)
+                console.log(this.$router);
+                this.currentTab = this.$router.history.current.path
+            }
+        },
+        watch: {
+                $route: function (to, from) {
+                    console.log(to.params);
+                     console.log(to);
+                }
+            }
+    })
+</script>
+
+</html>

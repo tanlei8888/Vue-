@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            margin: auto;
+        }
+        
+        nav {
+            display: flex;
+            width: 300px;
+            height: 50px;
+            line-height: 80px;
+        }
+        
+        nav section {
+            flex: 1;
+            line-height: 50px;
+            text-align: center;
+            border: 1px solid black;
+        }
+        
+        .content {
+            width: 300px;
+            border: black 1px solid;
+        }
+        
+        .active {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <nav>
+            <section v-bind:class="['nav-item',{
+                active:currentId==item.id
+            }]" v-for="item,index in navs" :key="index" @click="changeTab(index)">
+                {{item.title}}
+            </section>
+        </nav>
+        <section class="content">
+            <!-- 使用动态组件渲染 -->
+            <!-- keep-alive 组件 缓存当前组件 -->
+            <!-- <keep-alive>
+                <component :is="componentId"></component>
+            </keep-alive> -->
+            <!-- include 参数使用 -->
+            <!-- <keep-alive :include='["app-home","app-introduce"]'>
+                <component :is="componentId"></component>
+            </keep-alive> -->
+            <!-- exclude 参数使用 -->
+            <!-- <keep-alive :exclude='["app-product"]'>
+                <component :is="componentId"></component>
+            </keep-alive> -->
+            <!-- :max 参数使用  当缓存组件数量超过两个时 当出现第三个就会销毁一个空出缓存的位置-->
+            <h1>{{meeasge}}</h1>
+            <keep-alive :max='2'>
+                <component :is="componentId" :meeasge.sync='meeasge'></component>
+            </keep-alive>
+        </section>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        Vue.component('app-home', function(resolve, reject) {
+                setTimeout(() => {
+                    resolve({
+                        props: ['meeasge'],
+                        data: function() {
+                            return {
+                                meeasge_children: this.meeasge
+                            }
+                        },
+                        template: `
+                        
+                        <section
+                        @click='handelclick'
+                        >主页{{meeasge_children}}
+                        </section>
+                        `,
+                        methods: {
+                            handelclick: function() {
+                                this.meeasge_children = "💯"
+                                this.$emit('update:meeasge', this.meeasge_children)
+                            }
+                        },
+                        beforeCreate() {
+                            console.log('创建前');
+                        },
+                        created() {
+                            console.log('创建了');
+                        },
+                        beforeUpdate() {
+                            console.log('挂载前');
+                        },
+                        updated() {
+                            console.log('挂载中');
+                        },
+                        beforeDestroy() {
+                            console.log('销毁前');
+                        },
+                        destroyed() {
+                            console.log('销毁了');
+                        },
+                    })
+                }, 2000);
+
+            })
+            // Vue.component('app-home', {
+            //     template: `<section>主页</section>`,
+            //     beforeDestroy() {
+            //         console.log('销毁前');
+            //     },
+            //     destroyed() {
+            //         console.log('销毁了');
+            //     },
+            // });
+        Vue.component('app-introduce', {
+
+            template: `<section>公司介绍</section>`,
+            beforeDestroy() {
+                console.log('销毁前');
+            },
+            destroyed() {
+                console.log('销毁了');
+            },
+
+        });
+        Vue.component('app-product', {
+            template: `<section>产品介绍</section>`,
+            beforeDestroy() {
+                console.log('销毁前');
+            },
+            destroyed() {
+                d
+                console.log('销毁了');
+            },
+        });
+        Vue.component('app-ycf', {
+            template: `<section>袁春发</section>`,
+            beforeDestroy() {
+                console.log('销毁前');
+            },
+            destroyed() {
+                console.log('销毁了');
+            },
+        });
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                meeasge: '👍',
+                currentId: 'app-home',
+                navs: [{
+                    id: 'app-home',
+                    title: "主页",
+                    content: '主页'
+                }, {
+                    id: 'app-introduce',
+                    title: '公司介绍',
+                    content: '公司介绍'
+                }, {
+                    id: 'app-product',
+                    title: '产品介绍',
+                    content: '产品介绍'
+                }, {
+                    id: 'app-ycf',
+                    title: '袁春发',
+                    content: '袁春发'
+                }]
+            },
+            methods: {
+                changeTab: function(index) {
+                    this.currentId = this.navs[index].id
+                },
+                // chlidrenchange: function(value) {
+                //     this.meeasge = value
+                // }
+            },
+            computed: {
+                componentId: function() {
+                    return this.currentId
+
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

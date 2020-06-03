@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #app{
+            width: 500px;
+        }
+        .nav{
+            display: flex;
+            text-align: center;
+            border: 1px solid black;
+        }
+        .item{
+            flex: 1;
+            border: 1px solid black;
+        }
+        .avtive{
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="nav">
+            <router-link 
+            :class="['item']" 
+            to='/home'>主页</router-link>
+            <router-link
+            :class="['item']"  to='/introduce'>公司介绍</router-link>
+            <router-link 
+            :class="['item']"  to='/product'>产品详情</router-link>
+        </div>
+        <router-view></router-view>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script>
+        const appHome = { template: '<div>主页</div>' };
+        const appIntroduce = { template: '<div>公司介绍</div>' };
+        const appProduct = { template: '<div>产品详情</div>' };
+        const routes = [
+            { path: '/home', component: appHome },
+            { path: '/introduce', component: appIntroduce },
+            { path: '/product', component: appProduct },
+        ]
+        const router = new VueRouter({
+            routes
+        });
+        const vm = new Vue({
+            el: '#app',
+            router,
+            data: {
+                
+            }
+        })
+    </script>
+</body>
+
+</html>

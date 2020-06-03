@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+       <div>{{msg}}</div>
+       <div>{{$data.mingyan}}</div>
+       <div>{{$data.biaoqing}}</div>
+       <div>{{$data.obj['contry']}}</div>
+       <button @click='changeText'>按钮</button>
+       <demo>
+           <h1>敲代码使我快乐</h1>
+       </demo>
+    </div>
+</body>
+
+
+<script src="https://cn.vuejs.org/js/vue.js"></script>
+<!-- 1. 引入 React Router 需要的依赖库 -->
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script>
+    let demo = Vue.component('demo',{
+        template:`
+            <div>
+                <div>
+                {{$root.msg}}
+                    <slot></slot>
+                </div>
+                <div>
+                    <button @click='changetxt'>修改</button>
+                </div>
+            </div>
+        `,
+        methods:{
+            changetxt:function(){
+                this.$root.mingyan = '凉拌炒鸡蛋蛋'
+            }
+        }
+    })
+    let vm = new Vue({
+        el:'#app',
+        data:{
+            msg:'键盘敲烂，月薪过万！',
+            mingyan:'写代码是一件很快乐的事情',
+            biaoqing:['💯','👍','😁'],
+            obj:{
+                'contry':'美国'
+            }
+        },
+        methods:{
+            changeText:function(){
+                this.obj.contry = '德国'
+            }
+        }
+    })
+</script>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{title}}</h1>
+        <myassembly @parent:title='title=$event' :title='title'>
+
+        </myassembly>
+        {{msg}}
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        Vue.component('myassembly', {
+            props: ['title'],
+            data: function() {
+                return {
+                    chlidren_title: this.title
+                }
+            },
+            template: `
+                <div>
+                    <h1>{{chlidren_title}}</h1>
+                    <button @click='chlidren'>提交</button>
+                </div>
+            `,
+            methods: {
+                chlidren: function() {
+                    this.$emit('parent:title', '哒哒哒哒');
+                    console.log(this);
+                    this.chlidren_title = "哒哒哒"
+                }
+            },
+        })
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                title: '以梦为马，不负韶华',
+                msg: ""
+            },
+            methods: {
+                // handelchange: function(value) {
+                //     this.msg = value;
+                //     this.title = '哒哒哒';
+                //     console.log(this);
+                // }
+            }
+        })
+    </script>
+</body>
+
+</html>

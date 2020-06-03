@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+       {{abc}}
+       <div>
+           <button  @click='addCount'>增加</button>
+       </div>
+    </div>
+</body>
+
+
+<script src="https://cn.vuejs.org/js/vue.js"></script>
+<!-- 1. 引入 React Router 需要的依赖库 -->
+<script src="https://unpkg.com/vuex@3.4.0/dist/vuex.js"></script>
+<script>
+    let store = new Vuex.Store({
+        state:{
+            count:1
+        },
+        mutations:{
+            add:function(state){
+                state.count ++
+                console.log(state);
+            }
+        }
+    })
+    let vm = new Vue({
+        el:'#app',
+        store,
+        computed:{
+            abc:function(){
+                return this.$store.state.count
+            }
+        },
+        methods:{
+            addCount:function(){
+                this.$store.commit('add')
+            }
+        }
+    })
+</script>
+
+</html>

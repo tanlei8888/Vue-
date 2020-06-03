@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <!-- <todos @click.native="handleClick($event)"></todos> -->
+        <!-- <todos v-bind:number="number"
+        v-bind:name="name"
+        ></todos> -->
+        <todos v-bind:arr="arr" v-bind:number="number" v-bind:name="name" v-bind:score="score" v-bind:person="p"></todos>
+    </div>
+    <div id="app"></div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        function Person(name, sex) {
+            this.name = name;
+            this.sex = sex
+        }
+
+        function Person1(name, sex) {
+            return [this.name = name, this.sex = sex]
+        }
+        Vue.component("todos", {
+            props: {
+                number: {
+                    type: Number,
+                    dafault: 100
+                },
+                name: {
+                    type: String,
+                    required: true
+                },
+                obj: {
+                    type: Object,
+                    default: function() {
+                        return {
+                            size: 100
+                        }
+                    }
+                },
+                score: {
+                    type: Number,
+                    validator: function(value) {
+                        return value > 60
+                    }
+                },
+                person: {
+                    type: Person
+                },
+                arr: {
+                    type: Array
+                }
+            },
+            template: `
+            <section>
+                number:{{number}}<br>
+                name:{{name}}<br>
+                obj.size:{{obj.size}}<br>
+                score:{{score}}<br>
+                person:{{person}}<br>
+                arr:{{arr}}
+            </section>
+            `
+
+
+        })
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                number: 12312312,
+                name: "💯",
+                score: 61,
+                p: new Person(),
+                arr: new Person1("张三", "男")
+            }
+        })
+    </script>
+</body>
+
+</html>

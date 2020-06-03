@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- v-clock 页面渲染时隐藏还未得到数据的标签 -->
+    <div id="app" v-cloak>
+        <!-- 可插入文本或标签 -->
+        <div id="app" v-html='html'></div>
+        <!-- 可插入文本 -->
+        <div id="app" v-text='text'></div>
+        <!-- 阻止编译 -->
+        <div v-pre>{{text}}</div>
+        <!-- 只渲染一次 不会再因数据发生改变 -->
+        <div v-once @click="once">
+            {{text}}
+        </div>
+    </div>
+    <script src="https://cn.vuejs.org/js/vue.js"></script>
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+                text:'你好',
+                html:'<p>我是PP</p>'
+            },
+            methods:{
+                once:function(){
+                    this.text = "我改变了"
+                }
+            }
+        })
+    </script>
+</body>
+</html>

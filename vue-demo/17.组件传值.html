@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div :posts="posts"></div>
+        <!-- 父传子 -->
+        <components :posts="posts"></components> 父传子
+        <br>
+        <br>
+        <br>
+        <br>
+        <!-- 子传父 通过事件传递 -->
+        <components :posts="posts" @passchlid='passChlid'></components> 子传父
+        <div>
+            {{message}}
+        </div>
+        <div>
+            {{aaaa}}
+        </div>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        let ComponentsA = {
+            props: ['posts'],
+            template: `
+                <div >
+                    <p v-for='item,index in posts' :key='index'
+                    >
+                    {{item}}
+                    </p>
+                    <button @click='child'>你打我，我告诉我爸爸</button>
+                </div>
+            `,
+            methods: {
+                child: function() {
+                    this.$emit('passchlid', '爸，有人捶我')
+                    this.aaaa = "👍" //可以改变 但不能渲染
+                    console.log(this.aaaa)
+                }
+            }
+        }
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                posts: [1, 2, 3, 4, 5, 6],
+                message: '',
+                aaaa: "💯"
+            },
+            components: {
+                'components': ComponentsA
+            },
+            methods: {
+                passChlid: function(value) {
+                    this.message = value
+                    this.aaaa = "😁" //可以先渲染 可以改变
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

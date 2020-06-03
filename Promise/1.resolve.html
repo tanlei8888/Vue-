@@ -1,44 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <script>
-        new Promise((resolve,reject)=>{
-            setTimeout(()=>{
+        new Promise((resolve, reject) => {
+            setTimeout(() => {
                 resolve('成功的数据')
-                // reject('失败的数据')
+                    // reject('失败的数据')
             })
         }).then(
             value => {
-                console.log('onResolved()1',value)
+                console.log('onResolved()1', value)
             }
         ).catch(
             reason => {
-                console.log('onRejected',reason)
+                console.log('onRejected', reason)
             }
         )
-        const p =Promise.resolve(1)
+        const p = Promise.resolve(1)
         p.then(value => console.log(value))
         const p2 = Promise.resolve(2)
         p2.then(value => console.log(value))
         const p3 = Promise.reject(3)
-        p3.then(null,reason => console.log(reason))
+        p3.then(null, reason => console.log(reason))
 
         // const pAll = Promise.all([p,p2,p3])
-        const pAll = Promise.all([p,p2])
+        // 全部成功返回resolve 否则 reason
+        const pAll = Promise.all([p, p2])
         pAll.then(
-            values => {
-                console.log('onResolved',values)
-            },
-            reason => {
-                console.log('onRejected',reason)
-            }
-        )
-        const pRace = Promise.race([p3,p2,p])
+                values => {
+                    console.log('onResolved', values)
+                },
+                reason => {
+                    console.log('onRejected', reason)
+                }
+            )
+            // 全部成功返回一个数组  否则返回失败的那个对象
+        const pRace = Promise.race([p3, p2, p])
         pRace.then(
             value => {
                 console.log(value)
@@ -49,4 +53,5 @@
         )
     </script>
 </body>
+
 </html>

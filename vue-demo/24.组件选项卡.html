@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            margin: auto;
+        }
+        
+        nav {
+            display: flex;
+            width: 300px;
+            height: 50px;
+            line-height: 80px;
+        }
+        
+        nav section {
+            flex: 1;
+            line-height: 50px;
+            text-align: center;
+            border: 1px solid black;
+        }
+        
+        .content {
+            width: 300px;
+            border: black 1px solid;
+        }
+        
+        .active {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <nav>
+            <section @click='changeTab(index)' v-for='item,index in navs' :key='item.id' :class='{active : currentId === item.id}'>
+                {{item.title}}
+            </section>
+        </nav>
+        <section class="content">
+            {{tabContent}}
+        </section>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                currentId: '1',
+                navs: [{
+                    id: '1',
+                    title: "主页",
+                    content: '主页'
+                }, {
+                    id: '2',
+                    title: '公司介绍',
+                    content: '公司介绍'
+                }, {
+                    id: '3',
+                    title: '产品介绍',
+                    content: '产品介绍'
+                }]
+            },
+            methods: {
+                changeTab: function(index) {
+                    this.currentId = this.navs[index].id
+                }
+            },
+            computed: {
+                tabContent: function() {
+                    let index = this.navs.findIndex((e, i) => {
+                        return e.id === this.currentId
+                    })
+                    return this.navs[index].content
+
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

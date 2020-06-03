@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #app {
+            width: 500px;
+        }
+
+        .nav {
+            display: flex;
+            text-align: center;
+            border: 1px solid black;
+        }
+
+        .item {
+            flex: 1;
+            border: 1px solid black;
+        }
+
+        .active {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="nav">
+            <router-link :class="['item',{active:id==123}]" 
+            to='/home/123'>主页</router-link>
+            <router-link :class="['item',{active:id==456}]" 
+            to='/introduce/456'>公司介绍</router-link>
+            <router-link :class="['item',{active:id==789}]" 
+            to='/product/789'>产品详情</router-link>
+        </div>
+        <router-view></router-view>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script>
+        let appHome = {
+            props: ['id'],
+            template: `
+                <div >{{id}}{{$route.params}}主页
+                <router-view></router-view>
+                </div>
+            `
+        };
+        let appIntroduce = {
+            props: ['id'],
+            template: '<div >{{id}}{{$route.params}}公司介绍<router-view></router-view></div>'
+        };
+        let appProduct = {
+            props: ['id'],
+            template: '<div >{{id}}{{$route.params}}产品详情</div>'
+        };
+        let PageNotFind = {
+            template: '<div>404未找到页面</div>'
+        };
+        let HomeDetail = {
+            template: `
+                <div>
+                    <img src='http://pic.netbian.com/uploads/allimg/200528/120844-1590638924b04f.jpg' />
+                </div>
+            `
+        }
+        let routes = [
+            {
+                path: '/home/:id',
+                component: appHome,
+                props: { id: '123' },
+                children: [
+                    {
+                        path: 'user',
+                        component: PageNotFind
+                    },
+                    {
+                        path: 'img',
+                        component: HomeDetail
+                    }
+                ]
+            },
+            {
+                path: '/introduce/:id',
+                component: appIntroduce,
+                props: { id: '456' },
+                children: [
+                    {
+                        path: 'img',
+                        component: HomeDetail
+                    }
+                ]
+            },
+            {
+                path: '/product/:id', component: appProduct, props: { id: '789' }
+            },
+        ]
+        let router = new VueRouter({
+            routes
+        });
+        let vm = new Vue({
+            el: '#app',
+            router,
+            data: {
+                id: '123'
+            },
+            watch: {
+                $route: function (to, from) {
+                    this.id = to.params.id
+                }
+            },
+        })
+        console.log(vm.$data)
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        [v-cloak] {
+            display: none
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak :style="bc">
+        <!-- `.native` - 监听组件根元素的原生事件。 -->
+        <demo @click.native="showDemo">
+            💯😊👍 💯😊👍 💯😊👍 💯😊👍
+        </demo>
+    </div>
+</body>
+<script src="https://cn.vuejs.org/js/vue.js"></script>
+
+<script>
+    // 注册全局组件
+    Vue.component("demo", {
+        template: `
+        <section>
+                <h1>修饰符native的使用</h1>
+                <slot></slot>
+                <slot></slot>
+                <slot></slot>
+                <slot></slot>
+                <slot></slot>
+                <slot></slot>
+                <slot></slot>
+                <slot></slot>
+                <slot></slot>
+        </section>
+     `
+    })
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            bc: {
+                backgroundColor: 'blue'
+            }
+        },
+        methods: {
+            showDemo: function() {
+                console.log("showDemoing.....");
+                this.bc.backgroundColor = "red"
+            }
+        },
+    })
+</script>
+
+</html>

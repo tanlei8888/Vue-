@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <test>
+            💯 😁 👍
+            <!-- <template v-slot:header='{user}'> -->
+            <!-- 简写 -->
+            <template #header='{user}'>
+                <h1>
+                    {{user.name}}
+                </h1>
+            </template>
+            <template v-slot:footer>
+                <h1>
+                   footer 
+                </h1>
+            </template>
+        </test>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        Vue.component('test', {
+            data: function() {
+                return {
+                    user: {
+                        name: '六一儿童节快乐！'
+                    }
+                }
+            },
+            template: `
+                <section>
+                    子组件
+                    <slot></slot>
+                    <slot name='footer'></slot>
+                    <slot></slot>
+                    <slot></slot>
+                    <slot name='header' :user='user'></slot>
+                </section>
+            `
+        })
+        let vm = new Vue({
+            el: '#app',
+            data: {
+
+            }
+        })
+    </script>
+</body>
+
+</html>
