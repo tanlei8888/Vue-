@@ -10,6 +10,7 @@
 - [event]:动态事件 data内可以事件方法修改 比如dableClick
 
 3. 事件属性
+链接:https://pan.baidu.com/s/1ol-MAQUR-kJ0DTbR-Hcvqw  密码:8p3z
 
 
 
