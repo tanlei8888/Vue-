@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NoteBook</title>
+    <title>Document</title>
     <link rel="stylesheet" href="./css/index.css">
     <style>
         [v-cloak] {
@@ -15,12 +15,175 @@
 
 <body>
     <div id="NBapp" class="NBapp" v-cloak>
-        <notebook></notebook>
+        <header>
+            <h1>待办事项</h1>
+            <input autofocus autocomplete="off" type="text" placeholder="What needs to be done?" v-model='inputValue'
+                @keyup.enter='add'>
+        </header>
+        <div class="content">
+            <input 
+            id="allToggle"
+            class="allToggle"
+            type="checkbox" 
+            v-model="allDone"
+            v-show='values.length != 0'
+            >
+            <label for="allToggle"></label>
+            <ul class="noteBool-list">
+                <li class="list-item" v-for='item,index in filtersValues' :key='values.id' 
+                :class='{completed:item.checked}'>
+                    <div class="view">
+                        <input 
+                        type="checkbox" 
+                        class="toggle"
+                        v-model='item.checked'
+                        >
+                        <label for="" @dblclick='editNb(item)'>
+                            {{item.content}}
+                        </label>
+                        <div class="del" @click='removeNb(index)'>
+                            x
+                        </div>
+                    </div>
+                    <!-- <input
+                    class="edit"
+                    type="text"
+                    v-model="item.content"
+                    @blur="doneEdit(todo)"
+                    @keyup.enter="doneEdit(todo)"
+                    @keyup.esc="cancelEdit(todo)"
+                    /> -->
+                </li>
+            </ul>
+        </div>
+        <footer class="footer" v-cloak v-show='values.length != 0'>
+            <span class="todo-count">
+                剩下<strong>{{dataLength}}</strong>项
+            </span>
+            <ul class="filters">
+                <li>
+                    <a href="#/all" 
+                    :class="{ selected: visibility == 'all' }">All</a>
+                </li>
+                <li>
+                    <a href="#/active"
+                    :class="{ selected: visibility == 'active' }" 
+                    >激活</a>
+                </li>
+                <li>
+                    <a href="#/checked" 
+                    :class="{ selected: visibility == 'checked' }">完成</a>
+                </li>
+            </ul>
+            <button class="clear-completed"  >
+                清除已完成
+            </button>
+        </footer>
     </div>
-    <script src="https://cn.vuejs.org/js/vue.js"></script>
-    <script src="./js/utils.js"></script>
-    <script src="./components/app.js"></script>
-    <script src="./js/main.js"></script>
-    <script src="./js/router.js"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+        // let all = Vue.
+        //设置获取和储存本地localstorage方法
+        let storageFN = {
+            //设置本地储存函数
+            setData: function (data) {
+                localStorage.setItem('nbItem', JSON.stringify(data))
+            },
+            //获取本地储存函数
+            getData: function () {
+                let data = JSON.parse(localStorage.getItem('nbItem') || "[]");
+                data.forEach((e, i) => {
+                    e.id = i
+                });
+                storageFN.id = data.length;
+                return data
+            },
+            id: null
+        }
+        //设置一个路由来更换渲染试图的values
+        let filters = {
+            all:function(values){
+                return values;
+            },
+            active:function(values){
+                return values.filter(e=>!e.checked)
+            },
+            checked:function(values){
+                return values.filter(e=>e.checked)
+            }
+        }
+        let vm = new Vue({
+            el: '#NBapp',
+            data: {
+                inputValue: '',
+                values: storageFN.getData(),
+                visibility:'all'
+            },
+            methods: {
+                add: function () {
+                    if (!this.inputValue.trim()) {
+                        alert('不能输入空内容')
+                    } else {
+                        this.values.push({
+                            id: storageFN.id++,
+                            content: this.inputValue,
+                            checked: false
+                        })
+                        this.inputValue = ""
+
+                    }
+                    console.log(storageFN.getData());
+                    console.log(this.values);
+                },
+                removeNb: function (index) {
+                    this.values.splice(index, 1)
+                },
+                editNb:function(item){
+
+                }
+            },
+            watch: {
+                values: {
+                    handler: function (values) {
+                        storageFN.setData(values)
+                        console.log(values);
+                    }
+                },
+                deep:true
+            },
+            computed: {
+                filtersValues:function(){
+                    return filters[this.visibility](this.values)
+                },
+                dataLength:function(){
+                    return filters.active(this.values).length
+                },
+                allDone:{
+                    get:function(){
+                        return this.dataLength === 0
+                    },
+                    set:function(value){
+                        this.values.forEach(e=>{
+                            e.checked = value
+                        })
+                            console.log(value);
+                    }
+                }
+            },
+        })
+
+        function onHashChange () {
+            let visibility = window.location.hash.replace(/#\/?/, "");
+            if(filters[visibility]){
+                vm.visibility = visibility
+            }else{
+                window.location.hash = "";
+                vm.visibility = 'all';
+            }
+        }
+        onHashChange();
+        window.addEventListener('hashchange',onHashChange)
+    </script>
 </body>
+
 </html>

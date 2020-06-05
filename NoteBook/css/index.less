@@ -8,30 +8,15 @@ body{
     background-color: #f5f5f5;
 }
 .completed{
+    
     color: #d9d9d9;
     text-decoration: line-through;
-}
-.hidden{
-    display: none;
-}
-.show{
-    display: block;
 }
 .NBapp{
     width: 550px;
     margin: auto;
     header{
-        // height:200px;
-        // z-index: 1000;
-        position: relative;
-        .allToggle{
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 165px;
-            left: 10px;
-            box-shadow: none;
-        }
+        
         h1{
             width: 100%;
             text-align: center;
@@ -54,20 +39,16 @@ body{
             font-style: italic;
             font-family: serif;
         }
-        .tips{
-            border: 1px solid  #ddd;
-            li{
-                height: 30px;
-                font-size: 20px;
-                line-height: 30px;
-                text-indent: 1em;
-                background-color: white;
-                border-bottom: 1px solid #ddd;
-                color: blue;
-            }
-        }
     }
     .content {
+        position: relative;
+        .allToggle{
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: -40px;
+            left: 10px;
+        }
         width: 100%;
         background-color: #fff;
         .noteBool-list {
@@ -96,13 +77,7 @@ body{
                         // color: #4d4d4d;
                         padding-left: 20px;
                     }
-                    input{
-                        width: 480px;
-                        font-size: 24px;
-                        font-weight: 300;
-                        // color: #4d4d4d;
-                        padding-left: 20px;
-                    }
+            
                     .del{
                         height: 50px;
                         line-height: 50px;
@@ -126,12 +101,15 @@ body{
           color: #c4c4c4;
           font-weight: 100;
           display: flex;
-        //   justify-content: space-between;
+          justify-content: space-between;
           align-items: center;
           padding: 0 10px;
-          box-shadow: 2px 4px 4px 2px #ddd;
+        .todo-count {
+         
+        }
+      
           .filters {
-             padding-left: 100px;
+             
               li {
                 width: 40px;
                 height: 40px;
@@ -149,13 +127,10 @@ body{
                     border: 1px solid #eed4d5;
                 }
       
+            .clear-completed {
+              
             }
-                .clear-completed {
-                    width: 100px;
-                    padding-left: 80px;
-                    text-decoration: underline;
-                    cursor: pointer;
-                }
+        }
     }
         // .footer::before {
         //     content: '';
