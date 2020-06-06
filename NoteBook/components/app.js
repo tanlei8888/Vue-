@@ -24,7 +24,7 @@
         watch: {
             //监听全局values变化 每次变化传递最新数据给storage
             values: {
-                handler: function (newValues,oldValues) {
+                handler: function (newValues) {
                     storageFN.setData(newValues)
                 },
                 deep:true//允许监听绑定数据变化
@@ -43,7 +43,8 @@
                 })
                 return tips
             },
-            //每次更新hash 得到新visibility 调用筛选器改变数据计算filtersValues
+            //每次更新hash 得到新visibility 调用筛选器改变数据计算
+            //所以this.values需要计算 让此数据去渲染页面
             filtersValues:function(){
                 return filters[this.visibility](this.values)
             },
@@ -63,10 +64,7 @@
                 },
                 // 自定义添加set 做set 每次设置values每项的checked属性
                 set:function(value){
-                    this.values.forEach(e=>{
-                        e.checked = value
-                    })
-                        console.log(value);
+                    this.values.forEach(e => e.checked = value)
                 }
             }
         },

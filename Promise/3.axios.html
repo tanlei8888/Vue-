@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+    <div id="player">
+        <div class="player-header">
+            <div class="left">
+                Personal player
+            </div>
+            <div class="right">
+                <input 
+                type="text"
+                @keyup.enter="searchMusic"
+                v-model='musicName'
+                >
+                <img src="./images/zoom.png" alt="">
+            </div>
+        </div>
+        <div class="musicContent">
+            <ul class="musicList">
+                <li 
+                class="musicItem" 
+                v-for='item,index in musicLists' :key='item.id'>
+                    <img src="./images/play.png" alt=""
+                    @click='playing(item.id)'
+                    >
+                    <p>{{item.name}}</p>
+                </li>
+            </ul>
+            <div class="musicMiddle">
+                <div class="middle">
+                    <img src="./images/disc.png" alt="">
+                </div>
+                <div class="musicImg">
+                    <img src="./images/cover.png" alt="">
+                </div>
+                <div class="top">
+                    <img src="./images/player_bar.png" alt="">
+                </div>
+            </div>
+            <div class="musicDiscuss">
+                <h4>热门评论</h4>
+                <div
+                class="discussItem"
+                v-for='dis,index in discussList'
+                >
+                    <div class="person"><img :src="dis.user.avatarUrl" alt=""></div>
+                    <div class="content"
+                    v-for='dis in discussList'
+                    >
+                        <div class="title">
+                           {{dis.user.nickname}}
+                        </div>
+                        <div class="txt">
+                           {{dis.content}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="player-bottom">
+            <audio :src="musicUrl" controls="controls" autoplay="autoplay" loop="loop" class="myaudio"></audio>
+        </div>
+    </div>
+    <script src="../vue-demo/node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/axios/dist/axios.js"></script>
+    <script>
+        axios.defaults.baseURL = 'https://apimusic.linweiqin.com/';
+      
+        let myPlayer = new Vue({
+            el:'#player',
+            data:{
+                //搜索框文本关键字
+                musicName:"",
+                //符合数据的音乐数据
+                musicLists:[],
+                //音乐数据的热门评论
+                discussList:[],
+                musicUrl:""
+                
+            },
+            methods:{
+                searchMusic:function(){
+                    axios.get('/search?keywords='+this.musicName).then(res=>{
+                        this.musicLists = res.data.result.songs
+                    })
+                    this.musicName = ""
+                },
+                playing:function(id){
+                    axios.get('/song/url?id='+id).then(res=>{
+                        this.musicUrl = res.data.data[0].url
+                       
+                    });
+                    axios.get('/comment/hot?type=0&id='+id).then(res=>{
+                        console.log(res);
+                        this.discussList = res.data.hotComments
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

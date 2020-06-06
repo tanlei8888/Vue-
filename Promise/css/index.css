@@ -1,0 +1,181 @@
+html {
+  height: 100vh;
+  background-image: url('../images/bg.jpg');
+  background-size: 100vw auto;
+  background-repeat: no-repeat;
+}
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+#player {
+  width: 800px;
+  height: 550px;
+  margin: 20px auto;
+}
+#player .player-header {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: gold;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+#player .player-header .left {
+  padding-left: 20px;
+  color: white;
+}
+#player .player-header .right {
+  width: 200px;
+  height: 32px;
+  background-color: white;
+  border-radius: 30px;
+  margin-right: 20px;
+}
+#player .player-header .right input {
+  border: none;
+  width: 160px;
+  height: 30px;
+  border-radius: 30px;
+  text-indent: 2em;
+  outline: medium;
+}
+#player .player-header .right img {
+  vertical-align: middle;
+}
+#player .musicContent {
+  height: 450px;
+  display: flex;
+  background-image: url('../images/bg.jpg');
+  background-repeat: no-repeat;
+  background-position: -400px -300px;
+}
+#player .musicContent .musicList {
+  width: 200px;
+  height: 450px;
+  border-right: 1px solid black;
+  overflow-y: auto;
+}
+#player .musicContent .musicList .musicItem {
+  width: 90%;
+  height: 40px;
+  margin: 5px auto;
+  border-radius: 5px;
+  padding-left: 10px;
+  line-height: 40px;
+  font-size: 14px;
+  color: white;
+  background-color: yellowgreen;
+  display: flex;
+  align-items: center;
+}
+#player .musicContent .musicList .musicItem img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+#player .musicContent .musicList .musicItem p {
+  width: 160px;
+  padding-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#player .musicContent .musicList::-webkit-scrollbar {
+  display: none;
+}
+#player .musicContent .musicMiddle {
+  position: relative;
+  width: 400px;
+}
+#player .musicContent .musicMiddle .top {
+  position: absolute;
+  left: 200px;
+  top: -10px;
+  transform: rotate(-25deg);
+  transform-origin: 12px 12px;
+  transition: 1s;
+}
+#player .musicContent .musicMiddle .active {
+  transform: rotate(0);
+}
+#player .musicContent .musicImg {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  left: 130px;
+  top: 110px;
+  animation: identifier linear 8s infinite ;
+}
+#player .musicContent .musicImg img {
+  width: 100%;
+  height: 100%;
+}
+#player .musicContent .middle {
+  position: absolute;
+  left: 80px;
+  top: 60px;
+  animation: identifier linear 8s infinite ;
+  z-index: 101;
+}
+#player .musicContent .musicDiscuss {
+  width: 200px;
+  height: 450px;
+  border-left: 1px solid black;
+  overflow: auto;
+  white-space: nowrap;
+}
+#player .musicContent .musicDiscuss h4 {
+  margin: 10px 0;
+  color: blue;
+}
+#player .musicContent .musicDiscuss .discussItem {
+  width: 200px;
+  height: 100px;
+}
+#player .musicContent .musicDiscuss .discussItem .person {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+#player .musicContent .musicDiscuss .discussItem .person img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+#player .musicContent .musicDiscuss .discussItem .content {
+  overflow: hidden;
+  width: 160px;
+  height: 80px;
+  padding-left: 10px;
+  text-align: left;
+}
+#player .musicContent .musicDiscuss .discussItem .content .title {
+  color: white;
+}
+#player .musicContent .musicDiscuss .discussItem .content .txt {
+  color: #ddd;
+}
+@keyframes identifier {
+  from {
+    transform: rotateZ(0);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+#player .player-bottom {
+  height: 60px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: #f1f3f4;
+}
+#player .player-bottom audio {
+  width: 100%;
+  margin-top: 5px;
+  outline: none;
+}
