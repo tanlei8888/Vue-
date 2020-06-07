@@ -15,93 +15,132 @@
                 Personal player
             </div>
             <div class="right">
-                <input 
-                type="text"
-                @keyup.enter="searchMusic"
-                v-model='musicName'
-                >
+                <input type="text" @keyup.enter="searchMusic" v-model='musicName'>
                 <img src="./images/zoom.png" alt="">
             </div>
         </div>
         <div class="musicContent">
             <ul class="musicList">
-                <li 
-                class="musicItem" 
-                v-for='item,index in musicLists' :key='item.id'>
-                    <img src="./images/play.png" alt=""
-                    @click='playing(item.id)'
-                    >
+                <li class="musicItem" v-for='item,index in musicLists' :key='item.id'>
+                    <img src="./images/play.png" alt="" @click='playing(item.id)'>
                     <p>{{item.name}}</p>
+                    <i v-if='item.mvid!=0' @click='playMV(item.mvid)'></i>
                 </li>
             </ul>
             <div class="musicMiddle">
-                <div class="middle">
+                <div :class="['middle',{playing:isplay}]">
                     <img src="./images/disc.png" alt="">
                 </div>
-                <div class="musicImg">
-                    <img src="./images/cover.png" alt="">
+                <div :class="['musicImg',{playing:isplay}]">
+                    <img :src="coverUrl==''?'./images/cover.png':coverUrl" alt="">
                 </div>
-                <div class="top">
+                <div :class="['top',{active:isplay}]">
                     <img src="./images/player_bar.png" alt="">
                 </div>
             </div>
             <div class="musicDiscuss">
                 <h4>热门评论</h4>
-                <div
-                class="discussItem"
-                v-for='dis,index in discussList'
-                >
+                <div class="discussItem" v-for='dis,index in discussList'>
                     <div class="person"><img :src="dis.user.avatarUrl" alt=""></div>
-                    <div class="content"
-                    v-for='dis in discussList'
-                    >
+                    <div class="content">
                         <div class="title">
-                           {{dis.user.nickname}}
+                            {{dis.user.nickname}}
                         </div>
                         <div class="txt">
-                           {{dis.content}}
+                            {{dis.content}}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="player-bottom">
-            <audio :src="musicUrl" controls="controls" autoplay="autoplay" loop="loop" class="myaudio"></audio>
+            <audio ref='audio' :src="musicUrl" controls="controls" autoplay="autoplay" loop="loop" class="myaudio" @play='play'
+                @pause='pause'></audio>
+        </div>
+        <div class="musicMV" v-show='showMV'>
+            <video ref='video' controls='controls' :src="musicMV"></video>
+            <div class="mask"></div>
+            <i @click='removeMV'></i>
         </div>
     </div>
     <script src="../vue-demo/node_modules/vue/dist/vue.js"></script>
     <script src="../node_modules/axios/dist/axios.js"></script>
     <script>
         axios.defaults.baseURL = 'https://apimusic.linweiqin.com/';
-      
+
         let myPlayer = new Vue({
-            el:'#player',
-            data:{
+            el: '#player',
+            data: {
                 //搜索框文本关键字
-                musicName:"",
+                musicName: "",
                 //符合数据的音乐数据
-                musicLists:[],
+                musicLists: [],
                 //音乐数据的热门评论
-                discussList:[],
-                musicUrl:""
-                
+                discussList: [],
+                //歌曲地址
+                musicUrl: "",
+                //audio开关
+                isplay: false,
+                //歌曲封面
+                coverUrl: '',
+                //mv地址
+                musicMV: '',
+                //mv开关
+                showMV: false,
+                //暂存URL
+                musicSrc:''
+
             },
-            methods:{
-                searchMusic:function(){
-                    axios.get('/search?keywords='+this.musicName).then(res=>{
+            methods: {
+                searchMusic: function () {
+                    axios.get('/search?keywords=' + this.musicName).then(res => {
                         this.musicLists = res.data.result.songs
                     })
                     this.musicName = ""
                 },
-                playing:function(id){
-                    axios.get('/song/url?id='+id).then(res=>{
+                playing: function (id) {
+                    //获取播放歌曲地址
+                    axios.get('/song/url?id=' + id).then(res => {
                         this.musicUrl = res.data.data[0].url
-                       
+
                     });
-                    axios.get('/comment/hot?type=0&id='+id).then(res=>{
-                        console.log(res);
+                    //获取播放歌曲评论
+                    axios.get('/comment/hot?type=0&id=' + id).then(res => {
+                        // console.log(res);
                         this.discussList = res.data.hotComments
+                    });
+                    // 获取歌曲封面
+                    axios.get('/song/detail?ids=' + id).then(res => {
+                        // console.log(res)
+                        // 设置封面
+                        this.coverUrl = res.data.songs[0].al.picUrl
                     })
+                },
+                play() {
+                    this.isplay = true;
+                    // console.log(this.$refs);
+                },
+                pause() {
+                    // console.log(this.$refs);
+                    this.isplay = false;
+                },
+                playMV(id) {
+                    if (id) {
+                        this.showMV = true
+                        axios.get('/mv/url?id=' + id).then(res => {
+                            console.log(this.$refs.audio);
+                            if(this.$refs.audio){
+                                this.$refs.audio.pause()
+                                this.musicSrc =  this.$refs.audio.src
+                            }
+                            this.musicMV = res.data.data.url
+                        })
+                    }
+                },
+                removeMV() {
+                    this.showMV = false
+                    this.$refs.audio.src = this.musicSrc
+                    this.$refs.video.pause()
                 }
             }
         })
