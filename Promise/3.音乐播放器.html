@@ -48,7 +48,10 @@
             </div>
             <div :class="['musicGeci',{show:toggle},{hidden:!toggle}]" @click.stop='toggleDisplay'>
                 <div class="content" :style='{top:top+"px"}'>
-                    <p :class='{txtColor:i === j}' v-for='lyric,i in musicLyric'>{{lyric}}</p>
+                    <p :class='{txtColor:item.time === currentTime }' 
+                    v-for='item,i in musicLyric'>
+                    {{item.lyric}}
+                </p>
                 </div>
             </div>
             <div class="musicDiscuss">
@@ -67,8 +70,14 @@
             </div>
         </div>
         <div class="player-bottom">
-            <audio ref='audio' :src="musicUrl" controls="controls" autoplay="autoplay" loop="loop" class="myaudio"
-                @play.stop='play' @pause.stop='pause'></audio>
+            <audio 
+             @canplay="getDuration" @timeupdate="updateTime"
+            ref='audio' 
+            :src="musicUrl" 
+            controls="controls" 
+            autoplay="autoplay" 
+            loop="loop" class="myaudio"
+            @play.stop='play' @pause.stop='pause'></audio>
         </div>
         <div class="musicMV" v-show='showMV'>
             <video ref='video' controls='controls' :src="musicMV"></video>
@@ -101,14 +110,14 @@
                 showMV: false,
                 //暂存URL
                 musicSrc: '',
-                //歌词
-                musicLyric: "",
+                //歌词 歌词时间
+                musicLyric: [],
                 name: '',
                 person: '',
                 alia: '',
                 top: 100,//控制歌词上移的变量
                 time: null,//储存定时器
-                timeArr:[],//获取到的时间数组
+                currentTime:0,
                 j:0,
                 //本地储存 历史记录
                 musicTips: JSON.parse(sessionStorage.getItem('musicTips') || '[]'),
@@ -129,7 +138,6 @@
                 }).then(res => {
                     this.musicLists = res.result.songs
                 });
-
             },
             computed: {
                 //查询的历史记录
@@ -145,6 +153,15 @@
                 }
             },
             methods: {
+                getDuration() {   
+                  console.log(this.$refs.audio.duration);
+                   //此时可以获取到duration  
+                   this.duration = this.$refs.audio.duration;  
+                  },  
+                 updateTime(e) {   
+                      this.currentTime = Math.round(e.target.currentTime)  
+                      //获取audio当前播放时间     }, 
+                 },
                 //搜索历史歌曲
                 searchHistoryMusic: function (value) {
                     Axios.get('/search', {
@@ -183,7 +200,7 @@
                     // this.musicName = ""
                 },
                 playing: function (id) {
-                    this.j = 0
+                    
                     //获取播放歌曲地址
                     Axios.get('/song/url', {
                         params: {
@@ -219,20 +236,30 @@
                         }
                     }).then(res => {
                         //分割出歌词部门
-                        this.musicLyric = res.lrc.lyric.split(/\[.*\]/);
+                        // this.musicLyric = res.lrc.lyric.split(/\[.*\]/);
+                        let arr =  res.lrc.lyric.split(/\[.*\]/);
                         // 分割出时间
-                        console.log(res.lrc.lyric);
-                        let arr = res.lrc.lyric.match(/\:(.+?)\]/g);
-                        let arr1 = [];
-                        arr.forEach(e => {
-                            arr1.push(e.substring(1,e.length-1))
+                        let arr1 = res.lrc.lyric.match(/\[(.+?)\]/g);
+                        let arr2 = [];
+                        arr1.forEach((e,i) => {
+                            // let m = e.substring(1,3)*60
+                            // let s = Math.round(e.substring(4,e.length-1))
+                            // console.log(m);
+                            // console.log(s);
+                            if(e[1] === '0'&& arr[i] !== ''){
+                                arr2.push({
+                                    lyric:arr[i],
+                                    //截取分钟和秒 都转为秒
+                                    time:e.substring(1,3)*60 + Math.round(e.substring(4,e.length-1))
+                                })
+                            }    
                         })
-                        arr1.splice(0,1)
-                        this.timeArr = arr1
-                        console.log(this.timeArr);
+                        this.musicLyric = arr2
+                        console.log(this.musicLyric);
                     })
                     //如果在播放新歌曲初始化歌词页面清楚之前的定时器
                     clearInterval(this.time)
+                    this.j = 0
                     this.top = 100;
                 },
                 //播放音乐
@@ -242,6 +269,8 @@
                     this.time = setInterval(() => {
                         this.top -= 1
                         this.j++
+                        console.log(this.currentTime);
+                        console.log(this.$refs.audio.currentTime);
                     }, 200);
                     // this.timeArr.forEach((e,i) => {
                     //     this.time = setTimeout(() => {
