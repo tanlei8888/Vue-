@@ -1,7 +1,9 @@
 html {
+  height: 100vh;
   background-image: url('../images/bg.jpg');
   background-size: 100vw auto;
   background-repeat: no-repeat;
+  perspective: 800px;
 }
 * {
   margin: 0;
@@ -9,6 +11,9 @@ html {
   list-style: none;
   text-decoration: none;
   box-sizing: border-box;
+}
+[v-cloak] {
+  display: none;
 }
 #player {
   width: 800px;
@@ -34,6 +39,7 @@ html {
   background-color: white;
   border-radius: 30px;
   margin-right: 20px;
+  position: relative;
 }
 #player .player-header .right input {
   border: none;
@@ -46,9 +52,27 @@ html {
 #player .player-header .right img {
   vertical-align: middle;
 }
+#player .player-header .right .tips {
+  width: 200px;
+  border-radius: 3px;
+  background-color: plum;
+  position: absolute;
+  z-index: 102;
+}
+#player .player-header .right .tips p {
+  border-bottom: 1px solid black;
+  cursor: pointer;
+  text-indent: 1em;
+  color: white;
+}
+#player .player-header .right .tips p:hover {
+  background-color: salmon;
+}
 #player .musicContent {
+  width: 800px;
   height: 450px;
   display: flex;
+  position: relative;
   background-image: url('../images/bg.jpg');
   background-repeat: no-repeat;
   background-position: -400px -300px;
@@ -68,9 +92,9 @@ html {
   line-height: 40px;
   font-size: 14px;
   color: white;
-  background-color: yellowgreen;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 #player .musicContent .musicList .musicItem img {
   width: 20px;
@@ -94,11 +118,23 @@ html {
   background-repeat: no-repeat;
   background-position: 0 -48px;
 }
+#player .musicContent .musicList .musicItem:hover {
+  transform: scale(1.1);
+}
 #player .musicContent .musicList::-webkit-scrollbar {
   display: none;
 }
+#player .musicContent .musicGeci {
+  width: 400px;
+  height: 100%;
+  padding-top: 20px;
+  text-align: center;
+  transition: all 1s;
+  color: white;
+}
 #player .musicContent .musicMiddle {
   position: relative;
+  transition: all 1s;
   width: 400px;
 }
 #player .musicContent .musicMiddle .top {
@@ -133,6 +169,23 @@ html {
   top: 60px;
   z-index: 101;
 }
+#player .musicContent .musicDetail {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  bottom: 20px;
+}
+#player .musicContent .musicDetail span:nth-child(n+3) {
+  opacity: 0.5;
+}
+#player .musicContent .hidden {
+  display: none;
+  transition: all 2s;
+}
+#player .musicContent .show {
+  display: block;
+  transition: all 2s;
+}
 #player .musicContent .musicDiscuss {
   width: 200px;
   border-left: 1px solid black;
@@ -140,14 +193,15 @@ html {
 }
 #player .musicContent .musicDiscuss h4 {
   margin: 10px 0;
-  color: blue;
+  color: #fdae61;
+  text-align: center;
 }
 #player .musicContent .musicDiscuss .discussItem {
   width: 200px;
-  height: 100px;
-  padding: 0 10px;
+  padding: 10px 10px;
   display: flex;
   flex-wrap: nowrap;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
 }
 #player .musicContent .musicDiscuss .discussItem .person {
   width: 40px;
@@ -172,6 +226,11 @@ html {
 }
 #player .musicContent .musicDiscuss .discussItem .content .txt {
   color: #ddd;
+}
+#player .musicContent .musicDiscuss .discussItem:hover {
+  cursor: pointer;
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease-in-out;
 }
 #player .musicContent .musicDiscuss::-webkit-scrollbar {
   display: none;
@@ -216,10 +275,8 @@ html {
   width: 40px;
   height: 40px;
   background: url("../images/shutoff.png") no-repeat;
-  left: 50%;
-  margin-left: 400px;
-  margin-top: -273px;
-  top: 50%;
+  right: 10px;
+  top: 10px;
   cursor: pointer;
   z-index: 995;
 }

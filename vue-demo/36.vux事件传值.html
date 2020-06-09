@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- {{$store.state.counter}} -->
+        <div>
+            <button @click="add">加一</button>
+            <!-- <demo>{{counter}}:{{this.msg}}</demo> -->
+            {{localCountFromComputed}}
+            {{localCount}}
+            {{count}}
+            {{countAlias}}
+            {{countPlusLocalState}}
+        </div>
+    </div>
+</body>
+<script src="https://cn.vuejs.org/js/vue.js"></script>
+<script src="https://unpkg.com/vuex"></script>
+<script>
+    Vue.component("demo", {
+        template: `<div>{{$store.state.counter}}demo例子 <slot></slot></div>`
+    })
+    let store = new Vuex.Store({
+        state: {
+            counter: 0,
+            msg: "💯",
+            count: 0
+        },
+
+        mutations: {
+            increment: function (state) {
+                state.counter++;
+            }
+        }
+    })
+    let vm = new Vue({
+        el: "#app",
+        store,
+        // computed: {
+        //     counter:function(){
+        //         return this.$store.state.counter
+        //     }
+        // // },
+        // computed: Vuex.mapState([
+        //     // 映射 this.count 为 store.state.count
+        //     'counter',"msg"
+        // ]),
+        computed: {
+            localCountFromComputed: function () {
+                return this.localCount;
+            }, ...Vuex.mapState({
+                count: state => state.count,
+                countAlias: 'count',
+                // 为了能够使用 `this` 获取局部状态，必须使用常规函数
+                countPlusLocalState(state) {
+                    return state.counter + this.localCount
+                }
+            })
+        },
+        data() {
+            return {
+                localCount: 1
+            }
+        },
+        methods: {
+            add: function () {
+                this.$store.commit("increment");
+            }
+        },
+    })
+</script>
+
+</html>

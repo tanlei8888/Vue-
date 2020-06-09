@@ -111,10 +111,11 @@
             watch: {
                 $route: function (to, from) {
                     this.id = to.params.id
+                    console.log(to);
                 }
             },
         })
-        console.log(vm.$data)
+        // console.log(vm.$data)
     </script>
 </body>
 

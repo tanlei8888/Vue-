@@ -65,13 +65,13 @@
         },
         methods: {
             addCount: function () {
-                //触发同步方法
+                // 触发Vuex事件同步方法 方法一
                 // this.$store.commit({
                 //     type:'add',
                 //     step:10
                 // })
                 
-                //触发异步方法
+                // //触发Vuex事件异步方法 方法二
                 this.$store.dispatch('asyncAdd')
             }
         }
