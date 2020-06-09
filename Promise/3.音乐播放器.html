@@ -24,13 +24,14 @@
         </div>
         <div class="musicContent">
             <ul class="musicList">
-                <li class="musicItem" v-for='item,index in musicLists' :key='item.id' :style='colorBox[index%colorBox.length]'>
+                <li class="musicItem" v-for='item,index in musicLists' :key='item.id'
+                    :style='colorBox[index%colorBox.length]'>
                     <img src="./images/play.png" alt="" @click.stop='playing(item.id)'>
                     <p>{{item.name}}</p>
                     <i v-if='item.mvid!=0' @click.stop='playMV(item.mvid)'></i>
                 </li>
             </ul>
-            <div :class="['musicMiddle',{show:!toggle},{hidden:toggle}]" @click.stop='toggleDisplay' >
+            <div :class="['musicMiddle',{show:!toggle},{hidden:toggle}]" @click.stop='toggleDisplay'>
                 <div :class="['middle',{playing:isplay}]">
                     <img src="./images/disc.png" alt="">
                 </div>
@@ -45,8 +46,10 @@
                     <span>{{name + ' ' + '-'}}</span><span v-for='i in person'>{{' ' + i.name}}</span>
                 </div>
             </div>
-            <div :class="['musicGeci',{show:toggle},{hidden:!toggle}]" @click.stop='toggleDisplay' >
-                我是隐藏的
+            <div :class="['musicGeci',{show:toggle},{hidden:!toggle}]" @click.stop='toggleDisplay'>
+                <div class="content" :style='{top:top+"px"}'>
+                    <p :class='{txtColor:i === j}' v-for='lyric,i in musicLyric'>{{lyric}}</p>
+                </div>
             </div>
             <div class="musicDiscuss">
                 <h4>热门评论</h4>
@@ -65,7 +68,7 @@
         </div>
         <div class="player-bottom">
             <audio ref='audio' :src="musicUrl" controls="controls" autoplay="autoplay" loop="loop" class="myaudio"
-                @play='play' @pause='pause'></audio>
+                @play.stop='play' @pause.stop='pause'></audio>
         </div>
         <div class="musicMV" v-show='showMV'>
             <video ref='video' controls='controls' :src="musicMV"></video>
@@ -98,27 +101,35 @@
                 showMV: false,
                 //暂存URL
                 musicSrc: '',
-                name:'',
-                person:'',
-                alia:'',
+                //歌词
+                musicLyric: "",
+                name: '',
+                person: '',
+                alia: '',
+                top: 100,//控制歌词上移的变量
+                time: null,//储存定时器
+                timeArr:[],//获取到的时间数组
+                j:0,
                 //本地储存 历史记录
                 musicTips: JSON.parse(sessionStorage.getItem('musicTips') || '[]'),
-                colorBox:[
-                    {backgroundColor:'#f46d43'},
-                    {backgroundColor:'#fdae61'},
-                    {backgroundColor:'#fee08b'},
-                    {backgroundColor:'#abdda4'},
-                    {backgroundColor:'#66c2a5'},
+                colorBox: [
+                    { backgroundColor: '#f46d43' },
+                    { backgroundColor: '#fdae61' },
+                    { backgroundColor: '#fee08b' },
+                    { backgroundColor: '#abdda4' },
+                    { backgroundColor: '#66c2a5' },
                 ],
-                toggle:false
+                toggle: false
             },
             //在生命周期加载完成时请求初始数据
-            mounted(){
-                Axios.get('/search',{
-                    params:{keywords:'热门'}
+            mounted() {
+                //加载完毕时请求默认页面数据
+                Axios.get('/search', {
+                    params: { keywords: '热门' }
                 }).then(res => {
                     this.musicLists = res.result.songs
                 });
+
             },
             computed: {
                 //查询的历史记录
@@ -135,10 +146,10 @@
             },
             methods: {
                 //搜索历史歌曲
-                searchHistoryMusic:function(value){
-                    Axios.get('/search',{
-                        params:{
-                            keywords:value
+                searchHistoryMusic: function (value) {
+                    Axios.get('/search', {
+                        params: {
+                            keywords: value
                         }
                     }).then(res => {
                         this.musicLists = res.result.songs
@@ -159,40 +170,41 @@
                         })
                     }
                     //请求歌曲列表
-                    Axios.get('/search',{
-                        params:{
-                            keywords:this.musicName
+                    Axios.get('/search', {
+                        params: {
+                            keywords: this.musicName
                         }
                     }).then(res => {
                         this.musicLists = res.result.songs
                     })
                     this.musicName = ""
                 },
-                blur:function(){
+                blur: function () {
                     // this.musicName = ""
                 },
                 playing: function (id) {
+                    this.j = 0
                     //获取播放歌曲地址
-                    Axios.get('/song/url',{
-                        params:{
-                            id:id
+                    Axios.get('/song/url', {
+                        params: {
+                            id: id
                         }
                     }).then(res => {
                         this.musicUrl = res.data[0].url
                     })
                     //获取播放歌曲评论
-                    Axios.get('/comment/hot',{
-                        params:{
-                            type:'0',
-                            id:id
+                    Axios.get('/comment/hot', {
+                        params: {
+                            type: '0',
+                            id: id
                         }
                     }).then(res => {
                         this.discussList = res.hotComments
                     })
                     // 获取歌曲封面 名字 歌手 
-                    Axios.get('/song/detail',{
-                        params:{
-                            ids:id
+                    Axios.get('/song/detail', {
+                        params: {
+                            ids: id
                         }
                     }).then(res => {
                         this.coverUrl = res.songs[0].al.picUrl
@@ -200,23 +212,61 @@
                         this.person = res.songs[0].ar
                         this.alia = res.songs[0].alia[0]
                     })
+                    //获取歌词
+                    Axios.get('/lyric', {
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        //分割出歌词部门
+                        this.musicLyric = res.lrc.lyric.split(/\[.*\]/);
+                        // 分割出时间
+                        console.log(res.lrc.lyric);
+                        let arr = res.lrc.lyric.match(/\:(.+?)\]/g);
+                        let arr1 = [];
+                        arr.forEach(e => {
+                            arr1.push(e.substring(1,e.length-1))
+                        })
+                        arr1.splice(0,1)
+                        this.timeArr = arr1
+                        console.log(this.timeArr);
+                    })
+                    //如果在播放新歌曲初始化歌词页面清楚之前的定时器
+                    clearInterval(this.time)
+                    this.top = 100;
                 },
                 //播放音乐
                 play() {
                     this.isplay = true;
+                    //开始移动歌词
+                    this.time = setInterval(() => {
+                        this.top -= 1
+                        this.j++
+                    }, 200);
+                    // this.timeArr.forEach((e,i) => {
+                    //     this.time = setTimeout(() => {
+                    //         this.j++
+                    //         this.top -= 30
+                    //         console.log(e*1000);
+                    //     }, e*1000);
+                    // })
                 },
                 //暂停音乐
                 pause() {
                     this.isplay = false;
+                    //音乐停止，歌词停止
+                    // clearTimeout(this.time)
+                    clearInterval(this.time)
                 },
                 //播放mv
                 playMV(id) {
+                    
                     if (id) {
                         this.showMV = true
                         //请求mv地址
-                        Axios.get('/mv/url',{
-                            params:{
-                                id:id
+                        Axios.get('/mv/url', {
+                            params: {
+                                id: id
                             }
                         }).then(res => {
                             if (this.$refs.audio) {
@@ -234,7 +284,7 @@
                     this.$refs.audio.src = this.musicSrc;
                     this.$refs.video.pause()
                 },
-                toggleDisplay:function(){
+                toggleDisplay: function () {
                     this.toggle = !this.toggle
                 }
             },
