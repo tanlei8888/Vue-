@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./musicIcon/iconfont.css">
 </head>
 
 <body>
     <div id="player" v-cloak>
+        <!-- 头部搜索栏 -->
         <div class="player-header">
             <div class="left">
                 Personal player
@@ -23,6 +25,7 @@
             </div>
         </div>
         <div class="musicContent">
+            <!-- 歌曲目录 -->
             <ul class="musicList">
                 <li class="musicItem" v-for='item,index in musicLists' :key='item.id'
                     :style='colorBox[index%colorBox.length]'>
@@ -31,7 +34,8 @@
                     <i v-if='item.mvid!=0' @click.stop='playMV(item.mvid)'></i>
                 </li>
             </ul>
-            <div :class="['musicMiddle',{show:!toggle},{hidden:toggle}]" @click.stop='toggleDisplay'>
+            <!-- 歌曲封面界面 由toggleDisplay事件控制 toggle属性显示 -->
+            <div :class="['musicMiddle',{show:!toggle},{hidden:toggle}]" >
                 <div :class="['middle',{playing:isplay}]">
                     <img src="./images/disc.png" alt="">
                 </div>
@@ -45,15 +49,28 @@
                     <h4>{{alia}}</h4>
                     <span>{{name + ' ' + '-'}}</span><span v-for='i in person'>{{' ' + i.name}}</span>
                 </div>
-            </div>
-            <div :class="['musicGeci',{show:toggle},{hidden:!toggle}]" @click.stop='toggleDisplay'>
-                <div class="content" :style='{top:top+"px"}'>
-                    <p :class='{txtColor:item.time === currentTime }' 
-                    v-for='item,i in musicLyric'>
-                    {{item.lyric}}
-                </p>
+                <!-- 点击调到歌词 -->
+                <div class="toggleClick" @click.stop='toggleDisplay'>
+                    歌词
                 </div>
             </div>
+            <!-- 歌词界面 由toggleDisplay事件控制 toggle属性显示 -->
+            <div :class="['musicGeci',{show:toggle},{hidden:!toggle}]" >
+                <div class="content" :style='{top:top+"px"}'>
+                    <p :class='{txtColor:i === j}' 
+                    v-for='item,i in musicLyric.lyric'
+                    :key='i'
+                    @click.stop='Jump(i)'
+                    >
+                    {{item}}
+                    </p>
+                </div>
+                <!-- 点击跳到封面 -->
+                <div class="toggleClick" @click.stop='toggleDisplay'>
+                    封面
+                </div>
+            </div>
+            <!-- 歌曲评论 -->
             <div class="musicDiscuss">
                 <h4>热门评论</h4>
                 <div class="discussItem" v-for='dis,index in discussList'>
@@ -69,57 +86,58 @@
                 </div>
             </div>
         </div>
+        <!-- audio控制器 -->
         <div class="player-bottom">
             <audio 
              @canplay="getDuration" @timeupdate="updateTime"
-            ref='audio' 
+            ref='audio'
             :src="musicUrl" 
             controls="controls" 
             autoplay="autoplay" 
-            loop="loop" class="myaudio"
-            @play.stop='play' @pause.stop='pause'></audio>
+            class="myaudio"
+            @play.stop='play'
+             @pause.stop='pause'
+             @ended.stop = 'ended'></audio>
+            <span @click='random' v-show='!playerFlag' class="icon iconfont one">&#xe61e;</span>
+            <span @click='loop' v-show='playerFlag' class="icon iconfont tow">&#xe622;</span>
+            <span @click='prev' class="icon iconfont three">&#xe636;</span>
+            <span @click='next' class="icon iconfont four">&#xe637;</span>
         </div>
+        <!-- vedio -->
         <div class="musicMV" v-show='showMV'>
             <video ref='video' controls='controls' :src="musicMV"></video>
             <div class="mask"></div>
             <i @click='removeMV'></i>
         </div>
     </div>
-    <script src="../vue-demo/node_modules/vue/dist/vue.js"></script>
+
+    <script src="./vue/dist/vue.js"></script>
     <script src="./axios/dist/axios.js"></script>
     <script src="./js/Axios.js"></script>
     <script>
         let myPlayer = new Vue({
             el: '#player',
             data: {
-                //搜索框文本关键字
-                musicName: "",
-                //符合数据的音乐数据
-                musicLists: [],
-                //音乐数据的热门评论
-                discussList: [],
-                //歌曲地址
-                musicUrl: "",
-                //audio开关
-                isplay: false,
-                //歌曲封面
-                coverUrl: '',
-                //mv地址
-                musicMV: '',
-                //mv开关
-                showMV: false,
-                //暂存URL
-                musicSrc: '',
-                //歌词 歌词时间
-                musicLyric: [],
-                name: '',
-                person: '',
-                alia: '',
+                musicName: "",//搜索框文本关键字
+                musicLists: [],//符合数据的音乐数据
+                discussList: [],//音乐数据的热门评论
+                musicUrl: "", //歌曲地址
+                musicId:'',//当前播放歌曲的ID
+                isplay: false,//audio开关
+                coverUrl: '', //歌曲封面
+                musicMV: '',//mv地址
+                playerFlag:false,//随机播放开关
+                showMV: false,//mv开关
+                musicSrc: '',//暂存URL
+                name: '',//歌曲名
+                person: '',//歌曲作者
+                alia: '',//歌曲介绍
+                musicLyric: [],//歌曲的歌词和歌词下标时间
                 top: 100,//控制歌词上移的变量
                 time: null,//储存定时器
-                currentTime:0,
-                j:0,
-                //本地储存 历史记录
+                currentTime:0,//当前歌曲播放的时间
+                j:0,//当前播放的那句歌词高亮下标
+                //本地储存 历史记录 输入框提示
                 musicTips: JSON.parse(sessionStorage.getItem('musicTips') || '[]'),
                 colorBox: [
                     { backgroundColor: '#f46d43' },
@@ -127,8 +145,8 @@
                     { backgroundColor: '#fee08b' },
                     { backgroundColor: '#abdda4' },
                     { backgroundColor: '#66c2a5' },
-                ],
-                toggle: false
+                ],//样式数据
+                toggle: false//歌词封面开关
             },
             //在生命周期加载完成时请求初始数据
             mounted() {
@@ -142,7 +160,7 @@
             computed: {
                 //查询的历史记录
                 tips: function () {
-                    let arr = []
+                    let arr = [];
                     this.musicTips.forEach(e => {
                         //寻找关键字 找到才push进数组
                         if (e.value.indexOf(this.musicName) !== -1) {
@@ -152,15 +170,20 @@
                     return arr
                 }
             },
-            methods: {
+            methods: { 
+                //跳转到点击到的那条歌词
+                Jump:function(index){
+                    console.log(this.$refs.audio);
+                    //当播放时间设定成这条歌词相对下标的播放的时间
+                    this.$refs.audio.currentTime = this.musicLyric.time[index-1];
+                },
                 getDuration() {   
-                  console.log(this.$refs.audio.duration);
                    //此时可以获取到duration  
                    this.duration = this.$refs.audio.duration;  
                   },  
                  updateTime(e) {   
+                      //获取audio当前播放时间
                       this.currentTime = Math.round(e.target.currentTime)  
-                      //获取audio当前播放时间     }, 
                  },
                 //搜索历史歌曲
                 searchHistoryMusic: function (value) {
@@ -200,7 +223,8 @@
                     // this.musicName = ""
                 },
                 playing: function (id) {
-                    
+                    this.musicId = id
+                    this.top = 100
                     //获取播放歌曲地址
                     Axios.get('/song/url', {
                         params: {
@@ -236,60 +260,58 @@
                         }
                     }).then(res => {
                         //分割出歌词部门
-                        // this.musicLyric = res.lrc.lyric.split(/\[.*\]/);
                         let arr =  res.lrc.lyric.split(/\[.*\]/);
                         // 分割出时间
                         let arr1 = res.lrc.lyric.match(/\[(.+?)\]/g);
-                        let arr2 = [];
+                        //容器
+                        let obj = {
+                            lyric:[],
+                            time:[]
+                        };
                         arr1.forEach((e,i) => {
-                            // let m = e.substring(1,3)*60
-                            // let s = Math.round(e.substring(4,e.length-1))
-                            // console.log(m);
-                            // console.log(s);
-                            if(e[1] === '0'&& arr[i] !== ''){
-                                arr2.push({
-                                    lyric:arr[i],
-                                    //截取分钟和秒 都转为秒
-                                    time:e.substring(1,3)*60 + Math.round(e.substring(4,e.length-1))
-                                })
+                            if(e[1] === '0'){
+                                //歌词
+                                obj.lyric.push(arr[i]);
+                                //歌词对应时间
+                                obj.time.push(e.substring(1,3)*60 + Math.round(e.substring(4,e.length-1)))
                             }    
-                        })
-                        this.musicLyric = arr2
-                        console.log(this.musicLyric);
+                        });
+                        this.musicLyric = obj;
                     })
-                    //如果在播放新歌曲初始化歌词页面清楚之前的定时器
-                    clearInterval(this.time)
-                    this.j = 0
-                    this.top = 100;
                 },
                 //播放音乐
                 play() {
                     this.isplay = true;
-                    //开始移动歌词
-                    this.time = setInterval(() => {
-                        this.top -= 1
-                        this.j++
-                        console.log(this.currentTime);
-                        console.log(this.$refs.audio.currentTime);
-                    }, 200);
-                    // this.timeArr.forEach((e,i) => {
-                    //     this.time = setTimeout(() => {
-                    //         this.j++
-                    //         this.top -= 30
-                    //         console.log(e*1000);
-                    //     }, e*1000);
-                    // })
                 },
                 //暂停音乐
                 pause() {
                     this.isplay = false;
-                    //音乐停止，歌词停止
-                    // clearTimeout(this.time)
-                    clearInterval(this.time)
+                },
+                //音乐播放完毕 随机或者顺序播放
+                ended:function(){
+                    this.top = 100
+                    findIndex(this,1)
+                },
+                //上一首
+                prev:function(){
+                    //播放当前歌曲的上一首 iNow - 1
+                    findIndex(this,-1)
+                },
+                //下一首
+                next:function(){
+                    //播放当前歌曲的下一首 iNow + 1
+                    findIndex(this,1)
+                },
+                //随机播放
+                random:function(){
+                    this.playerFlag = true
+                },
+                //顺序播放
+                loop:function(){
+                    this.playerFlag = false
                 },
                 //播放mv
                 playMV(id) {
-                    
                     if (id) {
                         this.showMV = true
                         //请求mv地址
@@ -301,7 +323,6 @@
                             if (this.$refs.audio) {
                                 //播放mv时停止播放音乐
                                 this.$refs.audio.pause();
-                                this.musicSrc = this.$refs.audio.src
                             }
                             this.musicMV = res.data.url
                         })
@@ -310,7 +331,7 @@
                 //关闭mv 播放歌曲
                 removeMV() {
                     this.showMV = false;
-                    this.$refs.audio.src = this.musicSrc;
+                    this.$refs.audio.play()
                     this.$refs.video.pause()
                 },
                 toggleDisplay: function () {
@@ -321,9 +342,43 @@
                 //监听本地本地储存的数据绑定一个方法 发生变化调用
                 musicTips: function (value) {
                     sessionStorage.setItem('musicTips', JSON.stringify(value))
+                },
+                //监听播放音乐的时间 发生变化时歌词和top同时发生变化
+                currentTime:function(value){
+                    this.musicLyric.time.forEach((e,i) => {
+                        //如果歌词对应下标的时间等于当前音乐播放器时间 这条歌词高亮
+                        //top值等于 当前歌词下标 * 36px + 100px 
+                        if(value === e){
+                            this.top = -i * 40 + 100
+                            this.j = i+1
+                        }
+                    })
                 }
             }
         })
+        //找寻当前播放的歌曲并处理
+        let findIndex = (that,i) => {
+            //生成一个随机的数字来控制播放歌曲的下标
+            let index = parseInt(Math.random()*that.musicLists.length-1);
+            //当前播放歌曲的下标
+            let iNow = that.musicLists.findIndex(e => {
+                return e.id === that.musicId
+            })
+            //如果是随机状态 随机下标
+            if(that.playerFlag){
+                that.playing(that.musicLists[index].id)
+            }else{
+                 //否则顺序播放当前歌曲 iNow + i
+                 //第一首不能上一首
+                 if(iNow+i >= 0){
+                    that.playing(that.musicLists[iNow+i].id)
+                 }else{
+                    alert('已经是第一首了')
+                    return
+                 }
+            }
+        }
+        
     </script>
 </body>
 

@@ -138,17 +138,35 @@ html {
   width: 100%;
   text-align: center;
   position: absolute;
+  transition: all 1.5s;
 }
 #player .musicContent .musicGeci .content p {
   padding: 10px 0;
 }
 #player .musicContent .musicGeci .content .txtColor {
   color: blue;
+  font-size: 20px;
+}
+#player .musicContent .musicGeci .toggleClick {
+  color: #ddd;
+  font-size: 20px;
+  position: absolute;
+  bottom: 40px;
+  right: 20px;
+  cursor: pointer;
 }
 #player .musicContent .musicMiddle {
   position: relative;
   transition: all 1s;
   width: 400px;
+}
+#player .musicContent .musicMiddle .toggleClick {
+  color: #ddd;
+  font-size: 20px;
+  position: absolute;
+  bottom: 40px;
+  right: 20px;
+  cursor: pointer;
 }
 #player .musicContent .musicMiddle .top {
   position: absolute;
@@ -261,11 +279,33 @@ html {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   background-color: #f1f3f4;
+  position: relative;
 }
 #player .player-bottom audio {
   width: 100%;
   margin-top: 5px;
   outline: none;
+}
+#player .player-bottom span {
+  position: absolute;
+  cursor: default;
+}
+#player .player-bottom span:hover {
+  color: #f46d43;
+}
+#player .player-bottom span:nth-child(2) {
+  right: 250px;
+}
+#player .player-bottom span:nth-child(3) {
+  right: 250px;
+}
+#player .player-bottom span:nth-child(4) {
+  top: 0px;
+  left: 45%;
+}
+#player .player-bottom span:nth-child(5) {
+  top: 0px;
+  left: 52%;
 }
 #player .musicMV video {
   width: 800px;

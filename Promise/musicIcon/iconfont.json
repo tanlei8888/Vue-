@@ -1,0 +1,58 @@
+{
+  "id": "1783901",
+  "name": "播放器",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1159894",
+      "name": "圆循环播放",
+      "font_class": "yuanxunhuanbofang",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "1159898",
+      "name": "随机播放",
+      "font_class": "suijibofang",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "12753745",
+      "name": "上一首",
+      "font_class": "shangyishou_huaban",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "12753746",
+      "name": "下一首",
+      "font_class": "xiayishou_huaban",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "5885472",
+      "name": "全屏",
+      "font_class": "quanping",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "8342286",
+      "name": "播放器复位",
+      "font_class": "bofangqifuwei",
+      "unicode": "e700",
+      "unicode_decimal": 59136
+    },
+    {
+      "icon_id": "14200511",
+      "name": "设 置",
+      "font_class": "shezhi",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    }
+  ]
+}
